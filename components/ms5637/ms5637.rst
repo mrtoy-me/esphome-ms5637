@@ -1,0 +1,74 @@
+MS5637 Barometric+Pressure+Sensor
+=================================
+
+.. seo::
+    :description: Instructions for setting up MS5637 Barometric Pressure Sensor
+    :image: ms5637.jpg
+    :keywords: MS5637
+
+The ``ms5637`` sensor platform allows you to use your MS5637
+(`datasheet <http://www.te.com/commerce/DocumentDelivery/DDEController?Action=showdoc&DocId=Data+Sheet%7FMS5637-02BA03%7FB1%7Fpdf%7FEnglish%7FENG_DS_MS5637-02BA03_B1.pdf%7FCAT-BLPS0037%20>`__,
+`PiicoDev`_) barometric pressure sensor with ESPHome. The :ref:`I²C <i2c>` is required to be set up in
+your configuration for this sensor to work.
+
+.. _PiicoDev: https://core-electronics.com.au/piicodev-pressure-sensor-ms5637.html
+
+.. code-block:: yaml
+
+    # Example basic configuration
+    sensor:
+      - platform: ms5637
+        pressure:
+          name: MS5637 Pressure
+
+Configuration variables:
+------------------------
+- **pressure** (*Required*): The information to setup the pressure sensor.
+
+  - **name** (**Required**, string): The name for the pressure sensor.
+  - **id** (*Optional*, :ref:`config-id`): Set the ID of this sensor for use in lambdas.
+  - All other options from :ref:`Sensor <config-sensor>`.
+
+- **temperature** (*Optional*): The information to setup the temperature sensor.
+
+  - **name** (**Required**, string): The name for the temperature sensor.
+  - **id** (*Optional*, :ref:`config-id`): Set the ID of this sensor for use in lambdas.
+  - All other options from :ref:`Sensor <config-sensor>`.
+
+- **resolution** (*Optional*): Set up sampling resolution for pressure and temperature sensors. 
+  Note: both sensors are always read and require adc conversion time irrespective of what sensors are setup.
+  In summary, resolution impacts each sensor's adc conversion time (1-17ms), sensor current draw (0.6-20uA)
+  and for pressure resolution (0.1-0.02mbar). Given the pressure sensor error band is typically +/- 2mbar,
+  the component's default resolution should meet the requirements of most applications. 
+  For more details on resolution, refer to the datasheet.
+
+  ``OSR_256``, ``OSR_512``, ``OSR_1024``, ``OSR_2048``, ``OSR_4096``, ``OSR_8192``. Defaults to ``OSR_2048``.
+
+- **address** (*Optional*, int): Manually specify the I²C address of
+  the sensor. Defaults to ``0x76``.
+
+- **update_interval** (*Optional*, :ref:`config-time`): The interval to check the
+  sensor. Defaults to ``60s``.
+
+
+Advanced Configuration
+----------------------
+
+.. code-block:: yaml
+
+    # Example advanced configuration
+    sensor:
+      - platform: ms5637
+        resolution: OSR_2048
+        pressure:
+          name: MS5637 Pressure
+        temperature:
+          name: MS5637 Temperature
+        address: 0x76
+        update_interval: 60s
+      
+
+See Also
+--------
+
+- :ref:`sensor-filters`
