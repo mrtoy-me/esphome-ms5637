@@ -75,16 +75,20 @@ void MS5637Component::dump_config() {
     case EEPROM_CRC_FAILED:
       ESP_LOGE(TAG, "  CRC check failed on EEPROM coefficients");
       break;
-    case NONE:
-      ESP_LOGCONFIG(TAG,"  Resolution: OSR %i",(256*(uint8_t)(1<<this->resolution_osr_)));
-      ESP_LOGCONFIG(TAG,"  ADC conversion: %ims",this->conversion_time_osr_);
-      LOG_I2C_DEVICE(this);
-      LOG_UPDATE_INTERVAL(this);
-      LOG_SENSOR("  ", "Temperature", this->temperature_sensor_);
-      LOG_SENSOR("  ", "Pressure", this->pressure_sensor_);
+    default:
       break;
   }
 
+  if (this->is_failed()) return;
+
+  LOG_I2C_DEVICE(this);
+  uint16_t resolution = ((uint16_t)(1<<this->resolution_osr_))*256;
+  ESP_LOGCONFIG(TAG,"  Resolution: OSR%i\n"
+                    "  ADC conversion: %ims\n",
+                    resolution, this->conversion_time_osr_ );
+  LOG_SENSOR("  ", "Temperature", this->temperature_sensor_);
+  LOG_SENSOR("  ", "Pressure", this->pressure_sensor_);
+  LOG_UPDATE_INTERVAL(this);
 }
 
 void MS5637Component::update() {
@@ -92,7 +96,7 @@ void MS5637Component::update() {
   this->adc_pressure_ = 0;
   this->status_clear_warning();
 
-  this->start_conversions();
+  this->start_conversions_();
 }
 
 bool MS5637Component::crc_check_(uint16_t *n_prom, uint8_t crc) {

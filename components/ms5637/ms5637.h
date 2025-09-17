@@ -56,7 +56,7 @@ enum OSR_Resolution {
 
 class MS5637Component : public PollingComponent, public i2c::I2CDevice, public sensor::Sensor {
  public:
-void set_temperature_sensor(sensor::Sensor *temperature) { temperature_sensor_ = temperature; }
+  void set_temperature_sensor(sensor::Sensor *temperature) { temperature_sensor_ = temperature; }
   void set_pressure_sensor(sensor::Sensor *pressure) { pressure_sensor_ = pressure; }
   void set_resolution(OSR_Resolution resolution) { resolution_osr_ = resolution; }
 
@@ -66,41 +66,41 @@ void set_temperature_sensor(sensor::Sensor *temperature) { temperature_sensor_ =
   float get_setup_priority() const override { return setup_priority::DATA; }
 
 protected:
-  bool crc_check_(uint16_t *n_prom, uint8_t crc);
+ bool crc_check_(uint16_t *n_prom, uint8_t crc);
 
-  void start_conversions_();
-  void read_temperature_();
-  void do_pressure_conversion_();
-  void read_pressure_and_publish_();
-  bool calculate_temperature_and_pressure_();
+ void start_conversions_();
+ void read_temperature_();
+ void do_pressure_conversion_();
+ void read_pressure_and_publish_();
+ bool calculate_temperature_and_pressure_();
 
-  uint8_t conversion_time_[6] = {
-    CONVERSION_TIME_OSR_256,  CONVERSION_TIME_OSR_512,
-    CONVERSION_TIME_OSR_1024, CONVERSION_TIME_OSR_2048,
-    CONVERSION_TIME_OSR_4096, CONVERSION_TIME_OSR_8192 };
-  uint16_t eeprom_coeff_[8];
+ uint8_t conversion_time_[6] = {
+   CONVERSION_TIME_OSR_256,  CONVERSION_TIME_OSR_512,
+   CONVERSION_TIME_OSR_1024, CONVERSION_TIME_OSR_2048,
+   CONVERSION_TIME_OSR_4096, CONVERSION_TIME_OSR_8192 };
+ uint16_t eeprom_coeff_[8];
 
-  enum ErrorCode {
-    NONE = 0,
-    COMMUNICATION_FAILED,
-    RESET_FAILED,
-    EEPROM_READ_FAILED,
-    EEPROM_CRC_FAILED,
-  } error_code_{NONE};
+ enum ErrorCode {
+   NONE = 0,
+   COMMUNICATION_FAILED,
+   RESET_FAILED,
+   EEPROM_READ_FAILED,
+   EEPROM_CRC_FAILED,
+ } error_code_{NONE};
 
-  uint8_t conversion_time_osr_;
-  uint8_t resolution_osr_;
+ uint8_t conversion_time_osr_;
+ uint8_t resolution_osr_;
 
-  uint32_t adc_pressure_;
-  uint32_t adc_temperature_;
+ uint32_t adc_pressure_;
+ uint32_t adc_temperature_;
 
-  float pressure_reading_;
-  float temperature_reading_;
+ float pressure_reading_;
+ float temperature_reading_;
 
 
-  // sensors for humidity and temperature
-  sensor::Sensor *temperature_sensor_{nullptr};
-  sensor::Sensor *pressure_sensor_{nullptr};
+ // sensors for humidity and temperature
+ sensor::Sensor *temperature_sensor_{nullptr};
+ sensor::Sensor *pressure_sensor_{nullptr};
 };
 
 }  // namespace ms5637
